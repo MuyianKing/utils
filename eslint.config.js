@@ -5,7 +5,10 @@ export default antfu(
     vue: true,
     isInEditor: false,
     formatters: true,
-    ignores: ['**/public/**'],
+    ignores: [
+      '**/public/**',
+      'package.json',
+    ],
   },
   {
     rules: {
