@@ -4,7 +4,10 @@ export default defineConfig({
   lib: [
     {
       format: 'esm',
-      syntax: ['chrome >= 60'],
+      syntax: [
+        'chrome <= 60',
+        'chrome >= 60'
+      ],
       dts: {
         distPath:"./dist/types"
       },

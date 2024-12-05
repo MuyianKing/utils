@@ -1,5 +1,5 @@
-import { nanoid } from 'nanoid'
 import { useUrlSearchParams } from '@vueuse/core'
+import { nanoid } from 'nanoid'
 
 /**
  * 判断字符串是否合法：0、null、false、''、'false'、'null'、'NULL'、'undefined'返回false，否则返回true
@@ -44,11 +44,10 @@ export function guid(len: number = 16): string {
  * @returns 返回查找到的数据
  */
 export function getLabelByVal<T>(array: T[], val: T[keyof T], config?: {
-  label: keyof T,
-  value: keyof T,
+  label: keyof T
+  value: keyof T
   obj: boolean
 }) {
-
   const label = (config?.label || 'label') as keyof T
   const value = (config?.value || 'value') as keyof T
   const obj = config?.obj || false
@@ -65,14 +64,14 @@ export function getLabelByVal<T>(array: T[], val: T[keyof T], config?: {
 }
 
 /**
- * 
+ *
  * @param {string} str
- * @param {any} def 
+ * @param {any} def
  */
 
 /**
  * JSON 解析
- * @param str 
+ * @param str
  * @param def 解析失败返回值
  * @returns 解析结果
  */

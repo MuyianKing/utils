@@ -1,23 +1,20 @@
-# Rslib Project
+<h1 align="center">@muyianking/utils</h1>
 
-## Setup
+<p align="center">
+通用工具函数
+</p>
 
-Install the dependencies:
+![NPM Version](https://img.shields.io/npm/v/%40muyianking%2Fcli) ![NPM License](https://img.shields.io/npm/l/%40muyianking%2Fcli)
 
-```bash
-pnpm install
-```
-
-## Get Started
-
-Build the library:
+## Install
 
 ```bash
-pnpm build
-```
+# 首先进行全局安装
+npm i @muyianking/cli -g
 
-Build the library in watch mode:
+# yarn
+yarn global add @muyianking/cli
 
-```bash
-pnpm dev
+# pnpm
+pnpm i @muyianking/cli -g
 ```
