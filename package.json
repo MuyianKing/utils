@@ -14,7 +14,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "rslib build",
+    "publish": "node ./script/publish.js",
+    "build": "node ./script/build.js",
     "dev": "rslib build --watch",
     "update-dep": "npm-check-updates && ncu -u && pnpm i",
     "commit": "git add . && git cz",
@@ -39,6 +40,7 @@
     "cz-git": "^1.11.0",
     "eslint": "9.16.0",
     "eslint-plugin-format": "^0.1.3",
+    "fs-extra": "^11.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "typescript": "^5.7.2"

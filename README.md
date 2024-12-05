@@ -4,17 +4,17 @@
 通用工具函数
 </p>
 
-![NPM Version](https://img.shields.io/npm/v/%40muyianking%2Fcli) ![NPM License](https://img.shields.io/npm/l/%40muyianking%2Fcli)
+![Static Badge](https://img.shields.io/badge/npm-v0.0.1-orange) ![Static Badge](https://img.shields.io/badge/license-ISC-green)
 
 ## Install
 
 ```bash
 # 首先进行全局安装
-npm i @muyianking/cli -g
+npm i @muyianking/utils -g
 
 # yarn
-yarn global add @muyianking/cli
+yarn global add @muyianking/utils
 
 # pnpm
-pnpm i @muyianking/cli -g
+pnpm i @muyianking/utils -g
 ```
