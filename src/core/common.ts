@@ -4,8 +4,14 @@ import { nanoid } from 'nanoid'
 /**
  * 判断字符串是否合法：0、null、false、''、'false'、'null'、'NULL'、'undefined'返回false，否则返回true
  */
-export function isTruth(str: string): boolean {
-  return !(!str || str === 'null' || str === 'NULL' || str === 'undefined' || str === 'false')
+export function isTruth(str: string | number | boolean): boolean {
+  return !(
+    !str
+    || str === 'null'
+    || str === 'NULL'
+    || str === 'undefined'
+    || str === 'false'
+  )
 }
 
 /**
@@ -31,7 +37,9 @@ export function someInArray<T>(someArray: T[], array: T[]): boolean {
  * @returns uuid
  */
 export function guid(len: number = 16): string {
-  return nanoid(len).replace(/-/g, 'a').replace(/_/g, 'b')
+  return nanoid(len).replace(/-|_/g, (match) => {
+    return match === '_' ? 'a' : (match === '-' ? 'b' : match)
+  })
 }
 
 /**
