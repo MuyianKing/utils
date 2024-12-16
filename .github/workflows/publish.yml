@@ -19,6 +19,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+
+      - name: pnpm i
+        run: |
+          pnpm i
       
       - name: npm build
         run: |
