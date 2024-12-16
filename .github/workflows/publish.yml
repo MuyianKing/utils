@@ -20,9 +20,9 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: pnpm i
+      - name: npm i
         run: |
-          pnpm i
+          npm i
       
       - name: npm build
         run: |
