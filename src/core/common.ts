@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 /**
  * 判断字符串是否合法：0、null、false、''、'false'、'null'、'NULL'、'undefined'返回false，否则返回true
  */
-export function isTruth(str: string | number | boolean): boolean {
+export function isTruth(str: string | number | boolean | object): boolean {
   return !(
     !str
     || str === 'null'

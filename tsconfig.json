@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "lib": ["ES5", "DOM"],
+    "target": "ESNext",
+    "lib": ["ES2024", "DOM"],
     "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
