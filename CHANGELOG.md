@@ -1,31 +1,5 @@
 ## [0.0.6](https://github.com/MuyianKing/utils/compare/v0.0.5...v0.0.6) (2024-12-16)
 
-
-
-## [0.0.5](https://github.com/MuyianKing/utils/compare/v0.0.4...v0.0.5) (2024-12-16)
-
-
-
-## [0.0.4](https://github.com/MuyianKing/utils/compare/v0.0.3...v0.0.4) (2024-12-16)
-
-
-
-## [0.0.3](https://github.com/MuyianKing/utils/compare/v0.0.2...v0.0.3) (2024-12-16)
-
-
-
-## [0.0.2](https://github.com/MuyianKing/utils/compare/v0.0.1...v0.0.2) (2024-12-16)
-
-
-### Features
-
-* :sparkles: 增加自动发布的github action ([b0a9279](https://github.com/MuyianKing/utils/commit/b0a92792cb123f1c40354dde67c56fafaa595a22))
-
-
-
-## 0.0.1 (2024-12-16)
-
-
 ### Features
 
 * :sparkles: 引入vitest ([23b6151](https://github.com/MuyianKing/utils/commit/23b61515d35bfbc8ccf1b1d9d90a34799cf4253d))
