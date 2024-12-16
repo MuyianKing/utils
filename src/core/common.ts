@@ -11,13 +11,13 @@ export function isTruth(str: string): boolean {
 /**
  * 判断someArray里面是否有元素在arr里面
  * @param someArray
- * @param arr
+ * @param array
  */
-export function someInArray<T>(someArray: T[], arr: T[]): boolean {
+export function someInArray<T>(someArray: T[], array: T[]): boolean {
   let i = 0
   const len = someArray.length
   for (; i < len; i++) {
-    if (arr.includes(someArray[i])) {
+    if (array.includes(someArray[i])) {
       break
     }
   }
@@ -44,9 +44,9 @@ export function guid(len: number = 16): string {
  * @returns 返回查找到的数据
  */
 export function getLabelByVal<T>(array: T[], val: T[keyof T], config?: {
-  label: keyof T
-  value: keyof T
-  obj: boolean
+  label?: keyof T
+  value?: keyof T
+  obj?: boolean
 }) {
   const label = (config?.label || 'label') as keyof T
   const value = (config?.value || 'value') as keyof T

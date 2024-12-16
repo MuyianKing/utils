@@ -9,12 +9,12 @@
 ## Install
 
 ```bash
-# 首先进行全局安装
-npm i @muyianking/utils -g
+# npm
+npm i @muyianking/utils
 
 # yarn
 yarn global add @muyianking/utils
 
 # pnpm
-pnpm i @muyianking/utils -g
+pnpm i @muyianking/utils
 ```

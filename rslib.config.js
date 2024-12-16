@@ -1,16 +1,18 @@
-import { defineConfig } from '@rslib/core';
+import { defineConfig } from '@rslib/core'
 
 export default defineConfig({
   lib: [
     {
       format: 'esm',
       syntax: [
-        'chrome <= 60',
-        'chrome >= 60'
+        'chrome >= 60',
       ],
       dts: {
-        distPath:"./dist/types"
+        distPath: './dist/types',
       },
-    }
+      output: {
+        target: 'web',
+      },
+    },
   ],
-});
+})

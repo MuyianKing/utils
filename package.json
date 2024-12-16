@@ -22,7 +22,8 @@
 		"lint": "git add . && lint-staged",
 		"husky-lint": "git add . && lint-staged",
 		"prepare": "husky",
-		"log": "conventional-changelog -p angular -i CHANGELOG.md -s"
+		"log": "conventional-changelog -p angular -i CHANGELOG.md -s",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@vueuse/core": "^12.0.0",
@@ -43,7 +44,9 @@
 		"fs-extra": "^11.2.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.2.10",
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^2.1.8"
 	},
 	"config": {
 		"commitizen": {
