@@ -26,8 +26,8 @@ pnpm i @muyianking/utils
 
 <!-- readme: collaborators,contributors -start -->
 <table>
-	<tbody>
-		<tr>
+  <tbody>
+    <tr>
             <td align="center">
                 <a href="https://github.com/MuyianKing">
                     <img src="https://avatars.githubusercontent.com/u/44827414?v=4" width="100;" alt="MuyianKing"/>
@@ -35,7 +35,7 @@ pnpm i @muyianking/utils
                     <sub><b>MuyianKing</b></sub>
                 </a>
             </td>
-		</tr>
-	<tbody>
+    </tr>
+  <tbody>
 </table>
 <!-- readme: collaborators,contributors -end -->
