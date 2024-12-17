@@ -72,12 +72,6 @@ export function getLabelByVal<T>(array: T[], val: T[keyof T], config?: {
 }
 
 /**
- *
- * @param {string} str
- * @param {any} def
- */
-
-/**
  * JSON 解析
  * @param str
  * @param def 解析失败返回值
