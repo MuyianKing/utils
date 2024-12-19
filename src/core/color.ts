@@ -36,8 +36,7 @@ export function isLight(color: string | Array<number>): boolean {
   if (_color === null || _color.length < 3) {
     return false
   }
-
-  return 0.213 * _color[0] + 0.715 * _color[1] + 0.072 * _color[2] > 255 / 2
+  return _color[0] * 0.299 + _color[1] * 0.587 + _color[2] * 0.114 > 192
 }
 
 /**
