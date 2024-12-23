@@ -32,11 +32,14 @@ export function getSuffix(fileName: string): string {
  * 获取指定文件类型的MIME类型
  * @param types
  */
-export function getMimeType(types: string[] | string): string[] {
+export function getMimeType<T extends string[] | string>(types: T): T extends string[] ? string[] : string {
+  type return_type = T extends string[] ? string[] : string
+
   if (!(Array.isArray(types))) {
-    types = [types]
+    return (mime_type.find(item => types === item.suffix)?.mime_type || '') as return_type
   }
-  return mime_type.filter(item => types.includes(item.suffix)).map(item => item.mime_type)
+
+  return mime_type.filter(item => types.includes(item.suffix)).map(item => item.mime_type) as return_type
 }
 
 /**
@@ -48,6 +51,8 @@ export function getType(file_name: string) {
   if (!file_name) {
     return ''
   }
+
+  file_name = file_name.toLowerCase()
 
   const suffix = getSuffix(file_name)
   if (IMAGE_SUFFIX.includes(suffix)) {
