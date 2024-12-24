@@ -3,11 +3,14 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import fsExtra from 'fs-extra'
+import ora from 'ora'
 import getObjectFromJson from './utils/getObjectFromJson.js'
 
 const __dirname = fileURLToPath(import.meta.url)
 
 async function publish() {
+  const spinner = ora(`publishing...`).start()
+
   const _path = `../../package.json`
   const package_path = path.resolve(__dirname, _path)
   const _config = getObjectFromJson(package_path)
@@ -32,9 +35,9 @@ async function publish() {
     await exec('git add .')
     await exec(`git commit -m"release: :package: ${version}"`)
     await exec(`git push && git tag ${version} && git push origin ${version}`)
-    console.log('\x1B[32m%s\x1B[0m', 'publish success')
+    spinner.succeed('publish successful, waiting for GitHub to automatically Release it to npm.')
   } catch (error) {
-    console.log('=======================publish error=======================')
+    spinner.error('spinner')
     console.log(error)
   }
 }
