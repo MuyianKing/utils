@@ -1,16 +1,6 @@
 import dayjs from 'dayjs'
 import { jsonparse } from './common'
 
-type Value = string | object
-
-interface SetOptions {
-  expire: number
-}
-
-interface GetOptions {
-  def: any
-}
-
 export default {
   setKey(key: string): string {
     key = `HL_${key}`
@@ -24,7 +14,9 @@ export default {
    * @param options
    * @param options.expire 有效期 单位天
    */
-  set(key: string, value: Value, { expire }: SetOptions = { expire: 7 }) {
+  set(key: string, value: string | object, { expire }: {
+    expire: number
+  } = { expire: 7 }) {
     key = this.setKey(key)
     store.set(key, value, expire)
   },
@@ -35,7 +27,7 @@ export default {
    * @param options
    * @param options.def 取不到时的默认值
    */
-  get(key: string, options?: GetOptions): Value {
+  get(key: string, options?: { def: string | object }): string | object {
     key = this.setKey(key)
     return store.get(key, options?.def || '')
   },
@@ -58,7 +50,7 @@ const store = {
    * @param value
    * @param expire 有效期
    */
-  set(key: string, value: Value, expire = 7) {
+  set(key: string, value: string | object, expire = 7) {
     if (!key || value === undefined) {
       return
     }
@@ -79,7 +71,7 @@ const store = {
   },
 
   // 存入
-  setItem(key: string, value: Value, expire: number) {
+  setItem(key: string, value: string | object, expire: number) {
     localStorage.setItem(key, JSON.stringify({
       value,
       time: dayjs().add(expire, 'day').valueOf(),
@@ -95,7 +87,7 @@ const store = {
     let objs: Array<{
       key: string
       value: {
-        value: Value
+        value: string | object
         time: number
       }
     }> = []
@@ -131,7 +123,7 @@ const store = {
    * @param key
    * @param def
    */
-  get(key: string, def: any): Value {
+  get(key: string, def: any): string | object {
     const item = localStorage.getItem(key)
 
     if (!item) {

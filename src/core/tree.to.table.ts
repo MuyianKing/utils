@@ -7,6 +7,7 @@ interface TreeType {
   next?: TreeType[]
   [x: string]: any
 }
+
 export function treeToTable(tree_data: TreeType[]) {
   tree_data = cloneDeep(tree_data)
 
