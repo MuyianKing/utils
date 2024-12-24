@@ -1,11 +1,13 @@
 import { flatTree } from '@core'
 import { expect, it } from 'vitest'
 
-const tree_data: {
+interface TreeData {
   label: string
   value: string
-  children: any[]
-}[] = [{
+  children?: TreeData[]
+}
+
+const tree_data: TreeData[] = [{
   label: '1',
   value: '1',
   children: [{

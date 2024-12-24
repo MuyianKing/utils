@@ -6,6 +6,7 @@ export * from './core/color'
 export * from './core/common'
 export * from './core/dom'
 export * from './core/file'
+export * from './core/tree.to.table'
 export * from './core/tree.utils'
 
 export {
