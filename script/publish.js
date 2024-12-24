@@ -9,7 +9,7 @@ import getObjectFromJson from './utils/getObjectFromJson.js'
 const __dirname = fileURLToPath(import.meta.url)
 
 async function publish() {
-  const spinner = ora(`publishing...`).start()
+  const spinner = ora(`create package.json`).start()
 
   const _path = `../../package.json`
   const package_path = path.resolve(__dirname, _path)
@@ -31,15 +31,29 @@ async function publish() {
   }
 
   try {
+    spinner.succeed('create package.json')
+    showLog(spinner, 'create log')
     await exec('pnpm log')
+    spinner.succeed('create log')
+    showLog(spinner, 'git add .')
     await exec('git add .')
+    spinner.succeed('git add .')
+    showLog(spinner, 'git commit')
     await exec(`git commit -m"release: :package: ${version}"`)
+    spinner.succeed('git commit')
+    showLog(spinner, 'git push && git tag && git push')
     await exec(`git push && git tag ${version} && git push origin ${version}`)
+    spinner.succeed('git push && git tag && git push')
     spinner.succeed('publish successful, waiting for GitHub to automatically Release it to npm.')
   } catch (error) {
-    spinner.error('spinner')
+    spinner.fail('spinner')
     console.log(error)
   }
+}
+
+function showLog(instance, text) {
+  instance.text = text
+  instance.start()
 }
 
 function exec(cmd) {
