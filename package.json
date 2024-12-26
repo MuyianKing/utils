@@ -1,18 +1,9 @@
 {
 	"name": "@muyianking/utils",
 	"type": "module",
-	"version": "0.1.0",
-	"exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/index.js"
-		}
-	},
-	"module": "./dist/index.js",
-	"types": "./dist/types/index.d.ts",
-	"files": [
-		"dist"
-	],
+	"version": "0.1.1",
+	"module": "./index.js",
+	"types": "./types/index.d.ts",
 	"scripts": {
 		"publish": "node ./script/publish.js",
 		"build": "node ./script/build.js",
