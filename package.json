@@ -5,7 +5,7 @@
 	"module": "./index.js",
 	"types": "./types/index.d.ts",
 	"scripts": {
-		"publish": "node ./script/publish.js",
+		"pub": "node ./script/publish.js",
 		"build": "node ./script/build.js",
 		"dev": "rslib build --watch",
 		"update-dep": "npm-check-updates && ncu -u && pnpm i",
@@ -13,7 +13,7 @@
 		"lint": "git add . && lint-staged",
 		"husky-lint": "git add . && lint-staged",
 		"prepare": "husky",
-		"log": "conventional-changelog -p angular -i CHANGELOG.md -s",
+		"log": "npx conventional-changelog -p angular -i CHANGELOG.md -s",
 		"test": "vitest"
 	},
 	"dependencies": {
