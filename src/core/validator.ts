@@ -23,7 +23,7 @@ type ValidateFun = (value: any) => boolean
  * @returns 校验方法
  */
 
-export function validateService(rule: any, value: any, validate: ValidateFun, callback: CallbackFun, errorMsg: string): string | boolean {
+function validateService(rule: any, value: any, validate: ValidateFun, callback: CallbackFun, errorMsg: string): string | boolean {
   callback = callback || vantCallback
 
   value = getValue(rule, value, callback)

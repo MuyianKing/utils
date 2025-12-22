@@ -3,7 +3,7 @@ import { jsonparse } from './common'
 
 export default {
   setKey(key: string): string {
-    key = `HL_${key}`
+    key = `MU_${key}`
     return key
   },
 

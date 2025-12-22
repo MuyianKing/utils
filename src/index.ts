@@ -9,6 +9,7 @@ export * from './core/file'
 export * from './core/tree.flatTree'
 export * from './core/tree.maketree'
 export * from './core/tree.to.table'
+export * from './core/validator'
 
 export {
   echartsUtil,

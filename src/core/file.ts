@@ -3,11 +3,11 @@ export const UPLOAD_FILE_MAX_SIZE = 10
 // 上传视频最大大小
 export const UPLOAD_VIDEO_MAX_SIZE = 500
 // 附件格式
-export const FILE_SUFFIX = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf']
+export const FILE_SUFFIX = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'zip']
 // 视频格式
 export const VIDEO_SUFFIX = ['mp4', 'm3u8', 'avi']
 // 图片格式
-export const IMAGE_SUFFIX = ['jpg', 'jpeg', 'png']
+export const IMAGE_SUFFIX = ['jpg', 'jpeg', 'png', 'gif']
 // 音频格式
 export const AUDIO_SUFFIX = ['mp3', 'wav', 'm4a']
 
