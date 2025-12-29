@@ -4,6 +4,10 @@
 	"version": "0.1.2",
 	"module": "./index.js",
 	"types": "./types/index.d.ts",
+	"repository": {
+	    "type": "git",
+	    "url": "https://github.com/MuyianKing/utils.git"
+	  },
 	"scripts": {
 		"pub": "node ./script/publish.js",
 		"build": "node ./script/build.js",
