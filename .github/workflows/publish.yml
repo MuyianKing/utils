@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+          registry-url: 'https://registry.npmjs.org/'
+          # 关键配置：启用 OIDC
+          always-auth: true
 
       - name: npm i
         run: |
@@ -28,15 +31,13 @@ jobs:
       - name: npm build
         run: |
           npm run build
+
+      - name: Install dependencies
+        run: npm ci
           
       - name: npm publish
         run: |
           cd ./dist
-          - name: Update npm
-          -run: npm install -g npm@latest
-          - run: npm ci
-          - run: npm run build --if-present
-          - run: npm test
           npm publish -r --tag latest --no-git-checks
 
       - name: Automatic Releases
