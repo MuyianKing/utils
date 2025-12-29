@@ -45,6 +45,10 @@ jobs:
           
       - name: Install dependencies
         run: npm i
+
+      - name: npm build
+        run: |
+          npm run build
           
       - name: npm publish
         run: |
