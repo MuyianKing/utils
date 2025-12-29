@@ -2,10 +2,6 @@
 	"name": "@muyianking/utils",
 	"type": "module",
 	"version": "0.1.2",
-	"publishConfig": {
-		"access": "public",
-		"registry": "https://registry.npmjs.org/"
-	},
 	"module": "./index.js",
 	"types": "./types/index.d.ts",
 	"scripts": {
