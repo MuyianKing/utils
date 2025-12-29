@@ -39,7 +39,7 @@ jobs:
       - name: npm publish
         run: |
           cd ./dist
-          npm publish -r --tag latest --no-git-checks
+          npm publish -r --tag latest --no-git-checks --access public
 
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
