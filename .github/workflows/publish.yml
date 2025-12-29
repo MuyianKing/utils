@@ -8,7 +8,7 @@ on:
       - v*
       
 permissions:
-  contents: write
+  contents: read 
   id-token: write  # Required for OIDC
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 22.x
+          node-version: 24
           registry-url: 'https://registry.npmjs.org/'
           # 关键配置：启用 OIDC
           always-auth: true
