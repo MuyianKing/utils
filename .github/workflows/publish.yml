@@ -8,6 +8,7 @@ on:
       
 permissions:
   contents: write
+  id-token: write  # Required for OIDC
 
 jobs:
   publish:
@@ -28,17 +29,15 @@ jobs:
         run: |
           npm run build
           
-      - name: Set Publishing Config
-        run: npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          
       - name: npm publish
         run: |
           cd ./dist
+          - name: Update npm
+          -run: npm install -g npm@latest
+          - run: npm ci
+          - run: npm run build --if-present
+          - run: npm test
           npm publish -r --tag latest --no-git-checks
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
