@@ -6,10 +6,10 @@ on:
   push:
     tags:
       - v*
-      
+
 permissions:
-  contents: read 
-  id-token: write  # Required for OIDC
+  contents: write   # 写权限用于创建 GitHub Release
+  id-token: write   # Required for OIDC
 
 jobs:
   publish:
@@ -17,29 +17,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org/'
-          # 关键配置：启用 OIDC
-          always-auth: true
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm i
+        run: pnpm install --frozen-lockfile
 
       - name: npm build
-        run: |
-          npm run build
-          
+        run: pnpm build
+
       - name: npm publish
-        run: |
-          cd ./dist
-          npm publish -r --tag latest --no-git-checks --access public --provenance false
+        working-directory: ./dist
+        run: pnpm publish --tag latest --no-git-checks --access public
 
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-        
+          files: |
+            dist/
