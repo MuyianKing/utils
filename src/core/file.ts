@@ -87,7 +87,9 @@ export function download(url: string, name: string): void {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-  window.URL.revokeObjectURL(link.href)
+  if (url.startsWith('blob:')) {
+    window.URL.revokeObjectURL(url)
+  }
 }
 
 /**

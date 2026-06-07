@@ -1,9 +1,8 @@
+import { execSync } from 'node:child_process'
 import { constants, copyFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { build } from '@rslib/core'
 import fsExtra from 'fs-extra'
-import config from '../rslib.config.js'
 import getObjectFromJson from './utils/getObjectFromJson.js'
 
 const __dirname = fileURLToPath(import.meta.url)
@@ -12,8 +11,8 @@ const __dirname = fileURLToPath(import.meta.url)
 const outputDir = path.resolve(__dirname, '../../dist')
 
 async function buildLib() {
-  // rslib打包
-  await build(config)
+  // rslib打包（使用CLI）
+  execSync('npx rslib build', { stdio: 'inherit', cwd: path.resolve(__dirname, '../..') })
 
   // 拷贝READMER.md
   const package_path = path.resolve(__dirname, `../../README.md`)

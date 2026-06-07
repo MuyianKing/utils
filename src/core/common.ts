@@ -77,7 +77,7 @@ export function getLabelByVal<T>(array: T[], val: T[keyof T], config?: {
  * @param def 解析失败返回值
  * @returns 解析结果
  */
-export function jsonparse(str: string, def: any = {}): any {
+export function jsonparse<T = any>(str: string, def: T = {} as T): T {
   try {
     return JSON.parse(str)
   } catch {

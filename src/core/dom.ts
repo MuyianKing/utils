@@ -3,15 +3,15 @@
  * @param el 进入全屏元素
  */
 export function openFullScreen(el: HTMLElement) {
-  const docElm = (el || document.body) as any
+  const docElm = el || document.body
   if (docElm.requestFullscreen) {
     docElm.requestFullscreen()
-  } else if (docElm.mozRequestFullScreen) {
-    docElm.mozRequestFullScreen()
-  } else if (docElm.webkitRequestFullScreen) {
-    docElm.webkitRequestFullScreen()
-  } else if (docElm.msRequestFullscreen) {
-    docElm.msRequestFullscreen()
+  } else if ((docElm as any).mozRequestFullScreen) {
+    (docElm as any).mozRequestFullScreen()
+  } else if ((docElm as any).webkitRequestFullScreen) {
+    (docElm as any).webkitRequestFullScreen()
+  } else if ((docElm as any).msRequestFullscreen) {
+    (docElm as any).msRequestFullscreen()
   }
 }
 
@@ -19,15 +19,15 @@ export function openFullScreen(el: HTMLElement) {
  * 退出全屏
  */
 export function exitFullScreen() {
-  const _document = document as any
+  const _document = document
   if (_document.exitFullscreen) {
     _document.exitFullscreen()
-  } else if (_document.mozCancelFullScreen) {
-    _document.mozCancelFullScreen()
-  } else if (_document.webkitCancelFullScreen) {
-    _document.webkitCancelFullScreen()
-  } else if (_document.msExitFullscreen) {
-    _document.msExitFullscreen()
+  } else if ((_document as any).mozCancelFullScreen) {
+    (_document as any).mozCancelFullScreen()
+  } else if ((_document as any).webkitCancelFullScreen) {
+    (_document as any).webkitCancelFullScreen()
+  } else if ((_document as any).msExitFullscreen) {
+    (_document as any).msExitFullscreen()
   }
 }
 
@@ -69,12 +69,22 @@ export function getImgSize(src: string): Promise<{ width: number, height: number
  * @returns dpi
  */
 export function getDpi(): number {
-  for (let i = 56; i < 2000; i++) {
-    if (matchMedia(`(max-resolution: ${i}dpi)`).matches === true) {
-      return i
+  // 优先使用 devicePixelRatio 估算，避免线性循环
+  if (window.devicePixelRatio) {
+    return Math.round(window.devicePixelRatio * 96)
+  }
+  // 退回到二分查找
+  let low = 56
+  let high = 2000
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2)
+    if (matchMedia(`(max-resolution: ${mid}dpi)`).matches) {
+      high = mid
+    } else {
+      low = mid + 1
     }
   }
-  return 0
+  return low
 }
 
 /**

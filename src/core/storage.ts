@@ -57,7 +57,7 @@ const store = {
 
     try {
       this.setItem(key, value, expire)
-      const keys = jsonparse(localStorage.getItem('HL_KEYS') || '', []) || []
+      const keys: string[] = jsonparse(localStorage.getItem('HL_KEYS') || '', []) || []
       if (!keys.includes(key)) {
         keys.push(key)
       }
@@ -83,13 +83,13 @@ const store = {
    * @param callback 清除成功回调
    */
   clearInvalid(callback: (() => void) | undefined) {
-    const keys: string[] = jsonparse(localStorage.getItem('keys') || '', []) || []
+    const keys: string[] = jsonparse<string[]>(localStorage.getItem('HL_KEYS') || '', []) || []
     let objs: Array<{
       key: string
       value: {
         value: string | object
         time: number
-      }
+      } | null
     }> = []
 
     keys.forEach((key) => {
@@ -109,7 +109,7 @@ const store = {
       // 依旧空间不够
       if (e instanceof Error && e.message.includes('exceeded the quota')) {
         // 按照存入时间删掉一半
-        objs = objs.filter(item => item.value).sort((a, b) => a.value.time - b.value.time)
+        objs = objs.filter((item): item is typeof item & { value: NonNullable<typeof item.value> } => !!item.value).sort((a, b) => a.value.time - b.value.time)
         objs.splice(0, Math.ceil(objs.length / 2)).forEach((item) => {
           this.remove(item.key)
           callback()

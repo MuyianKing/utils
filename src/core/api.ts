@@ -18,7 +18,7 @@ interface UseURLConfig {
 }
 
 interface UrlMap {
-  [x: string]: any
+  [x: string]: string | UrlMap
 }
 
 /**

@@ -5,7 +5,7 @@ interface TreeType {
   colspan?: number
   append?: boolean
   next?: TreeType[]
-  [x: string]: any
+  [x: string]: unknown
 }
 
 export function treeToTable(tree_data: TreeType[]) {
