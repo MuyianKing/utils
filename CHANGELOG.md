@@ -1,19 +1,18 @@
+## [0.1.3](https://github.com/MuyianKing/utils/compare/v0.1.2...v0.1.3) (2026-06-07)
+
+
+### Features
+
+* code optimization, dependency upgrade, test enhancement and docs ([282758f](https://github.com/MuyianKing/utils/commit/282758f30b927549f51fef4990e035fec3ffeaa2))
+
+
+
 ## [0.1.2](https://github.com/MuyianKing/utils/compare/v0.1.1...v0.1.2) (2025-12-29)
 
 
 ### Features
 
 * :sparkles: 增加validator模块 ([183b555](https://github.com/MuyianKing/utils/commit/183b55521b468bb3b347a328dea0c07b4d629799))
-
-
-
-## [0.1.2](https://github.com/MuyianKing/utils/compare/v0.1.1...v0.1.2) (2025-12-22)
-
-
-### Features
-
-* :sparkles: 增加validator模块 ([183b555](https://github.com/MuyianKing/utils/commit/183b55521b468bb3b347a328dea0c07b4d629799))
-
 
 
 ## [0.1.1](https://github.com/MuyianKing/utils/compare/v0.1.0...v0.1.1) (2024-12-26)
