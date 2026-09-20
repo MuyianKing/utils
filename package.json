@@ -1,7 +1,7 @@
 {
 	"name": "@muyianking/utils",
 	"type": "module",
-	"version": "0.1.3",
+	"version": "0.2.0",
 	"description": "通用工具函数库：通用判断与转换、DOM 与单位换算、文件处理、树结构转换、表单校验、颜色处理、localStorage 缓存与 ECharts 初始化",
 	"keywords": [
 		"utils",
