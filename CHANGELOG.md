@@ -1,3 +1,9 @@
+## [0.2.1](https://github.com/MuyianKing/utils/compare/v0.2.0...v0.2.1) (2026-09-20)
+
+### Bug Fixes
+
+* 修复 CHANGELOG 重复写入全量历史与写入 Unreleased 标题的问题 ([2e8be30](https://github.com/MuyianKing/utils/commit/2e8be30ab5e2a9e4fc7955583eea9e88d18383e7))
+
 # [0.2.0](https://github.com/MuyianKing/utils/compare/v0.1.3...v0.2.0) (2026-09-20)
 
 ### Bug Fixes
