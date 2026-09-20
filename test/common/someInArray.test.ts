@@ -12,3 +12,15 @@ it(`arrayUnion [3, '3'], ['3'] to be true`, () => {
 it(`arrayUnion [3, '3'] ['2'] to be false`, () => {
   expect(someInArray([3, '3'], ['2'])).toBe(false)
 })
+
+it('someInArray 空 someArray 返回 false', () => {
+  expect(someInArray([], [1, 2])).toBe(false)
+})
+
+it('someInArray 空 array 返回 false', () => {
+  expect(someInArray([1, 2], [])).toBe(false)
+})
+
+it('someInArray 部分命中即返回 true', () => {
+  expect(someInArray([1, 2, 3], [3, 4])).toBe(true)
+})

@@ -4,24 +4,26 @@
 
 ## 导出
 
-### openFullScreen(el)
+### openFullScreen(el?)
 
 ```typescript
-function openFullScreen(el: HTMLElement): void
+function openFullScreen(el?: HTMLElement): void
 ```
 
 进入全屏模式（含 vendor prefix 兼容）。
 
 **参数**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| el | `HTMLElement` | 要全屏显示的元素 |
+| 参数 | 类型          | 说明                                               |
+| ---- | ------------- | -------------------------------------------------- |
+| el   | `HTMLElement` | 可选，要全屏显示的元素；不传时使用 `document.body` |
 
 **示例**
 
 ```typescript
 openFullScreen(document.getElementById('myDiv')!)
+
+openFullScreen() // 不传时对整个 document.body 全屏
 ```
 
 ---
@@ -52,9 +54,9 @@ function isOverflow(el: HTMLElement): boolean
 
 **参数**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| el | `HTMLElement` | DOM 元素 |
+| 参数 | 类型          | 说明     |
+| ---- | ------------- | -------- |
+| el   | `HTMLElement` | DOM 元素 |
 
 **返回**: `boolean` — 内容溢出返回 `true`
 
@@ -69,16 +71,16 @@ isOverflow(document.querySelector('.text-box')!)
 ### getImgSize(src)
 
 ```typescript
-function getImgSize(src: string): Promise<{ width: number; height: number }>
+function getImgSize(src: string): Promise<{ width: number, height: number }>
 ```
 
 获取图片的原始宽高。
 
 **参数**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| src | `string` | 图片资源 URL |
+| 参数 | 类型     | 说明         |
+| ---- | -------- | ------------ |
+| src  | `string` | 图片资源 URL |
 
 **返回**: `Promise<{ width: number; height: number }>`
 
@@ -118,9 +120,9 @@ function getPxBymm(num: number): number
 
 毫米 → 像素。
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| num | `number` | 毫米值 |
+| 参数 | 类型     | 说明   |
+| ---- | -------- | ------ |
+| num  | `number` | 毫米值 |
 
 **返回**: `number` — 像素值
 
@@ -140,9 +142,9 @@ function getPtByPx(num: number): number
 
 像素 → 点。
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| num | `number` | 像素值 |
+| 参数 | 类型     | 说明   |
+| ---- | -------- | ------ |
+| num  | `number` | 像素值 |
 
 **返回**: `number` — 点值
 
@@ -162,9 +164,9 @@ function getPtBymm(num: number): number
 
 毫米 → 点。
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| num | `number` | 毫米值 |
+| 参数 | 类型     | 说明   |
+| ---- | -------- | ------ |
+| num  | `number` | 毫米值 |
 
 **返回**: `number` — 点值
 
@@ -184,9 +186,9 @@ function getMmByPx(num: number): number
 
 像素 → 毫米。
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| num | `number` | 像素值 |
+| 参数 | 类型     | 说明   |
+| ---- | -------- | ------ |
+| num  | `number` | 像素值 |
 
 **返回**: `number` — 毫米值
 
@@ -208,11 +210,11 @@ function translateUnit(num: number, from: string, to: string): number
 
 **参数**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| num | `number` | 转换的值 |
-| from | `string` | 源单位：`px`、`pt`、`mm` |
-| to | `string` | 目标单位：`px`、`pt`、`mm` |
+| 参数 | 类型     | 说明                       |
+| ---- | -------- | -------------------------- |
+| num  | `number` | 转换的值                   |
+| from | `string` | 源单位：`px`、`pt`、`mm`   |
+| to   | `string` | 目标单位：`px`、`pt`、`mm` |
 
 **返回**: `number`
 
@@ -220,6 +222,6 @@ function translateUnit(num: number, from: string, to: string): number
 
 ```typescript
 translateUnit(25.4, 'mm', 'px') // ≈ getDpi()
-translateUnit(96, 'px', 'pt')   // 72
-translateUnit(96, 'px', 'mm')   // 25.4
+translateUnit(96, 'px', 'pt') // 72
+translateUnit(96, 'px', 'mm') // 25.4
 ```

@@ -2,9 +2,9 @@ import { useUrlSearchParams } from '@vueuse/core'
 import { nanoid } from 'nanoid'
 
 /**
- * 判断字符串是否合法：0、null、false、''、'false'、'null'、'NULL'、'undefined'返回false，否则返回true
+ * 判断字符串是否合法：0、null、undefined、false、''、'false'、'null'、'NULL'、'undefined'返回false，否则返回true
  */
-export function isTruth(str: string | number | boolean | object): boolean {
+export function isTruth(str: string | number | boolean | object | null | undefined): boolean {
   return !(
     !str
     || str === 'null'
@@ -115,15 +115,20 @@ export function getCanUseValue(str: string | number): string {
 /**
  * 获取地址栏参数
  * @param {string} key 参数名
+ * @returns 参数值，取不到时返回空字符串
  */
-export function getUrlParam(key: string): string | number {
+export function getUrlParam(key: string): string {
   const params = useUrlSearchParams('history')
 
-  let value = params[key] as string
-  if (!value) {
-    const reg = new RegExp(`(^|&)${key}=([^&]*)(&|$)`)
-    value = window.location.hash.split('?')[1]?.match(reg)?.[2] || ''
+  const value = params[key]
+  if (Array.isArray(value)) {
+    return value[0] || ''
   }
 
-  return value || ''
+  if (value) {
+    return value
+  }
+
+  const reg = new RegExp(`(^|&)${key}=([^&]*)(&|$)`)
+  return window.location.hash.split('?')[1]?.match(reg)?.[2] || ''
 }

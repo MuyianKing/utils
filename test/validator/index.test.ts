@@ -1,110 +1,112 @@
+import { isEmail, isGangAo, isIdcardAll, isIdNum, isInt, isIP, isJson, isLatLong, isMobilePhone, isObjectEmpty, isPort, isTaiwan, isTelphone } from '@core'
 import { expect, it } from 'vitest'
-import { v_int, v_carnum, v_port, v_email, v_phone, v_tel, v_ip, v_latlong, v_id_num, v_phoneOrTel, isIdNum, isObjectEmpty, isJson, isTelphone, isIdcardAll, isGangAo, isTaiwan } from '@core'
 
-function ok(err?: Error | string): string {
-  return err instanceof Error ? err.message : ''
-}
-
-// v_int
-it('v_int 有效整数', () => {
-  expect(v_int(null, 123, ok)).toBe('')
-  expect(v_int(null, '456', ok)).toBe('')
-  expect(v_int(null, 0, ok)).toBe('')
+// isInt
+it('isInt 有效整数', () => {
+  expect(isInt('123')).toBe(true)
+  expect(isInt('+123')).toBe(true)
+  expect(isInt('-123')).toBe(true)
+  expect(isInt('0123')).toBe(true)
+  expect(isInt('0')).toBe(true)
 })
-it('v_int 无效整数', () => {
-  expect(v_int(null, 12.5, ok)).toBe('只能是整数')
-  expect(v_int(null, 'abc', ok)).toBe('只能是整数')
-})
-it('v_int 空值跳过校验', () => {
-  expect(v_int(null, '', ok)).toBe('')
-  expect(v_int(null, null, ok)).toBe('')
-  expect(v_int(null, undefined, ok)).toBe('')
+it('isInt 无效整数', () => {
+  expect(isInt('12.5')).toBe(false)
+  expect(isInt('abc')).toBe(false)
+  expect(isInt('')).toBe(false)
 })
 
-// v_carnum
-it('v_carnum 有效车牌', () => {
-  expect(v_carnum(null, '粤B12345', ok)).toBe('')
-  expect(v_carnum(null, '京A88888', ok)).toBe('')
-  expect(v_carnum(null, '沪AF12345', ok)).toBe('')
+// isPort
+it('isPort 有效端口', () => {
+  expect(isPort('80')).toBe(true)
+  expect(isPort('443')).toBe(true)
+  expect(isPort('0')).toBe(true)
+  expect(isPort('65535')).toBe(true)
 })
-it('v_carnum 无效车牌', () => {
-  expect(v_carnum(null, 'abc', ok)).toBe('车牌格式错误')
-  expect(v_carnum(null, '123456', ok)).toBe('车牌格式错误')
-})
-
-// v_port
-it('v_port 有效端口', () => {
-  expect(v_port(null, 80, ok)).toBe('')
-  expect(v_port(null, '443', ok)).toBe('')
-  expect(v_port(null, 65535, ok)).toBe('')
-})
-it('v_port 无效端口', () => {
-  expect(v_port(null, 70000, ok)).toBe('端口号格式错误')
-  expect(v_port(null, -1, ok)).toBe('端口号格式错误')
+it('isPort 无效端口', () => {
+  expect(isPort('70000')).toBe(false)
+  expect(isPort('-1')).toBe(false)
+  expect(isPort('080')).toBe(false)
+  expect(isPort('abc')).toBe(false)
 })
 
-// v_email
-it('v_email 有效邮箱', () => {
-  expect(v_email(null, 'test@example.com', ok)).toBe('')
-  expect(v_email(null, 'a@b.cn', ok)).toBe('')
+// isEmail
+it('isEmail 有效邮箱', () => {
+  expect(isEmail('test@example.com')).toBe(true)
+  expect(isEmail('a@b.cn')).toBe(true)
+  expect(isEmail('"john..doe"@example.com')).toBe(true)
 })
-it('v_email 无效邮箱', () => {
-  expect(v_email(null, 'not-email', ok)).toBe('邮箱地址格式错误')
-  expect(v_email(null, '@x.com', ok)).toBe('邮箱地址格式错误')
+it('isEmail 无效邮箱', () => {
+  expect(isEmail('not-email')).toBe(false)
+  expect(isEmail('@x.com')).toBe(false)
+  expect(isEmail('a@b')).toBe(false)
 })
-
-// v_phone
-it('v_phone 有效手机号', () => {
-  expect(v_phone(null, '13800138000', ok)).toBe('')
-  expect(v_phone(null, '15912345678', ok)).toBe('')
-})
-it('v_phone 无效手机号', () => {
-  expect(v_phone(null, '1234', ok)).toBe('手机号码格式错误')
+it('isEmail 超过 254 字符返回 false', () => {
+  expect(isEmail(`${'a'.repeat(250)}@b.com`)).toBe(false)
 })
 
-// v_tel
-it('v_tel 有效座机', () => {
-  expect(v_tel(null, '123456', ok)).toBe('')
-  expect(v_tel(null, '07551234567', ok)).toBe('')
+// isIP
+it('isIP 有效 IPv4', () => {
+  expect(isIP('192.168.1.1')).toBe(true)
+  expect(isIP('8.8.8.8')).toBe(true)
+  expect(isIP('0.0.0.0')).toBe(true)
 })
-it('v_tel 无效座机', () => {
-  expect(v_tel(null, '123', ok)).toBe('电话号码格式错误')
+it('isIP 无效 IPv4', () => {
+  expect(isIP('999.999.999.999')).toBe(false)
+  expect(isIP('abc')).toBe(false)
+  expect(isIP('')).toBe(false)
 })
-
-// v_ip
-it('v_ip 有效IP', () => {
-  expect(v_ip(null, '192.168.1.1', ok)).toBe('')
-  expect(v_ip(null, '8.8.8.8', ok)).toBe('')
+it('isIP 支持 IPv6', () => {
+  expect(isIP('::1')).toBe(true)
+  expect(isIP('2001:db8::1')).toBe(true)
+  expect(isIP('2001:db8:0:0:0:0:0:1')).toBe(true)
+  expect(isIP('fe80::1%eth0')).toBe(true)
 })
-it('v_ip 无效IP', () => {
-  expect(v_ip(null, '999.999.999.999', ok)).toBe('IP格式错误')
-  expect(v_ip(null, 'abc', ok)).toBe('IP格式错误')
+it('isIP 支持 IPv4 结尾的 IPv6', () => {
+  expect(isIP('::ffff:192.168.1.1')).toBe(true)
 })
-
-// v_latlong
-it('v_latlong 有效经纬度', () => {
-  expect(v_latlong('22.5431', '114.0579', ok)).toBe('')
-  expect(v_latlong(39.9042, 116.4074, ok)).toBe('')
-})
-it('v_latlong 无效经纬度', () => {
-  expect(v_latlong('abc', 'def', ok)).toBe('经纬度格式错误')
+it('isIP 无效 IPv6', () => {
+  expect(isIP('2001:db8:::1')).toBe(false)
+  expect(isIP('2001:db8:0:0:0:0:0:0:1')).toBe(false)
 })
 
-// v_id_num
-it('v_id_num 有效身份证', () => {
-  expect(v_id_num(null, '11010519491231002X', ok)).toBe('')
+// isLatLong
+it('isLatLong 有效经纬度', () => {
+  expect(isLatLong('22.5431,114.0579')).toBe(true)
+  expect(isLatLong('39.9042,116.4074')).toBe(true)
+  expect(isLatLong('90,180')).toBe(true)
 })
-it('v_id_num 无效身份证', () => {
-  expect(v_id_num(null, '123', ok)).toBe('身份证格式错误')
+it('isLatLong 无效经纬度', () => {
+  expect(isLatLong('abc,def')).toBe(false)
+  expect(isLatLong('91,0')).toBe(false)
+  expect(isLatLong('39.9')).toBe(false)
 })
 
-// v_phoneOrTel
-it('v_phoneOrTel 有效手机或座机', () => {
-  expect(v_phoneOrTel(null, '13800138000', ok)).toBe('')
-  expect(v_phoneOrTel(null, '1234567', ok)).toBe('')
+// isMobilePhone
+it('isMobilePhone 有效大陆手机号', () => {
+  expect(isMobilePhone('13800138000')).toBe(true)
+  expect(isMobilePhone('15912345678')).toBe(true)
+  expect(isMobilePhone('+8613800138000')).toBe(true)
+  expect(isMobilePhone('008613800138000')).toBe(true)
 })
-it('v_phoneOrTel 无效手机或座机', () => {
-  expect(v_phoneOrTel(null, 'abc', ok)).toBe('电话号码格式错误')
+it('isMobilePhone 支持港澳台手机号', () => {
+  expect(isMobilePhone('+85251234567')).toBe(true)
+  expect(isMobilePhone('85361234567')).toBe(true)
+  expect(isMobilePhone('0912345678')).toBe(true)
+})
+it('isMobilePhone 无效手机号', () => {
+  expect(isMobilePhone('1234')).toBe(false)
+  expect(isMobilePhone('abc')).toBe(false)
+  expect(isMobilePhone('')).toBe(false)
+})
+
+// isTelphone
+it('isTelphone 有效电话', () => {
+  expect(isTelphone('12345')).toBe(true)
+  expect(isTelphone('07551234567')).toBe(true)
+})
+it('isTelphone 无效电话', () => {
+  expect(isTelphone('123')).toBe(false)
+  expect(isTelphone('abc')).toBe(false)
 })
 
 // isIdNum
@@ -118,17 +120,22 @@ it('isIdNum 无效身份证号（校验位错误）', () => {
   // 故意改最后一位
   expect(isIdNum('110105194912310020')).toBe(false)
 })
+it('isIdNum 地区码不存在返回 false', () => {
+  expect(isIdNum('99010519491231002X')).toBe(false)
+})
 it('isIdNum 空字符串', () => {
   expect(isIdNum('')).toBe(false)
 })
 
 // isObjectEmpty
-it('isObjectEmpty 对象字段为空', () => {
-  expect(isObjectEmpty({ a: '', b: 'hello' }, ['a'])).toBe(true)
-  expect(isObjectEmpty({ a: null, b: 'hello' }, ['a'])).toBe(true)
+it('isObjectEmpty 存在空值时返回 true', () => {
+  expect(isObjectEmpty({ a: 1, b: '' }, ['a', 'b'])).toBe(true)
+  expect(isObjectEmpty({ a: 1, b: 0 }, ['a', 'b'])).toBe(true)
+  expect(isObjectEmpty({ a: 1, b: null }, ['a', 'b'])).toBe(true)
 })
-it('isObjectEmpty 对象字段全部有值', () => {
-  expect(isObjectEmpty({ a: 'hello', b: 'world' }, ['a', 'b'])).toBe(false)
+it('isObjectEmpty 都不为空时返回 false', () => {
+  expect(isObjectEmpty({ a: 1, b: '2' }, ['a', 'b'])).toBe(false)
+  expect(isObjectEmpty({ a: 1 }, [])).toBe(false)
 })
 
 // isJson
@@ -136,20 +143,11 @@ it('isJson 有效JSON', () => {
   expect(isJson('{"a":1}')).toBe(true)
   expect(isJson('[]')).toBe(true)
   expect(isJson('"string"')).toBe(true)
+  expect(isJson('123')).toBe(true)
 })
 it('isJson 无效JSON', () => {
   expect(isJson('not json')).toBe(false)
   expect(isJson('')).toBe(false)
-})
-
-// isTelphone
-it('isTelphone 有效电话', () => {
-  expect(isTelphone('12345')).toBe(true)
-  expect(isTelphone('07551234567')).toBe(true)
-})
-it('isTelphone 无效电话', () => {
-  expect(isTelphone('123')).toBe(false)
-  expect(isTelphone('abc')).toBe(false)
 })
 
 // isIdcardAll
@@ -173,6 +171,7 @@ it('isIdcardAll 无效', () => {
 it('isGangAo 有效港澳身份证', () => {
   expect(isGangAo('A123456')).toBe(true)
   expect(isGangAo('A1234567')).toBe(true)
+  expect(isGangAo('A123456(8)')).toBe(true)
 })
 it('isGangAo 无效港澳身份证', () => {
   expect(isGangAo('123')).toBe(false)

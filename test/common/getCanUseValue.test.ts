@@ -20,3 +20,16 @@ it('getCanUseValue 60vh', () => {
 it('getCanUseValue calc(100vh - 100px)', () => {
   expect(getCanUseValue('calc(100vh - 100px)')).toBe('calc(100vh - 100px)')
 })
+
+it('getCanUseValue 0 与负数补 px', () => {
+  expect(getCanUseValue(0)).toBe('0px')
+  expect(getCanUseValue(-10)).toBe('-10px')
+})
+
+it('getCanUseValue 数字字符串补 px', () => {
+  expect(getCanUseValue('12')).toBe('12px')
+})
+
+it('getCanUseValue auto 原样返回', () => {
+  expect(getCanUseValue('auto')).toBe('auto')
+})

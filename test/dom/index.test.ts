@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
+import { exitFullScreen, getDpi, getImgSize, getMmByPx, getPtBymm, getPtByPx, getPxBymm, isOverflow, openFullScreen, translateUnit } from '@core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getDpi, getImgSize, getMmByPx, getPtBymm, getPtByPx, getPxBymm, isOverflow, openFullScreen, exitFullScreen, translateUnit } from '@core'
 
 beforeEach(() => {
   vi.restoreAllMocks()
@@ -49,13 +49,33 @@ it('openFullScreen 调用 requestFullscreen', () => {
   expect(fn).toHaveBeenCalledOnce()
 })
 
-it('openFullScreen 默认使用 document.body', () => {
+it('openFullScreen 不传元素时使用 document.body', () => {
   const fn = vi.fn()
   const orig = document.body.requestFullscreen
   document.body.requestFullscreen = fn
-  openFullScreen(document.body)
+  openFullScreen()
   expect(fn).toHaveBeenCalledOnce()
   document.body.requestFullscreen = orig
+})
+
+describe('openFullScreen 厂商前缀回退', () => {
+  it('webkitRequestFullScreen', () => {
+    const el = { webkitRequestFullScreen: vi.fn() } as unknown as HTMLElement
+    openFullScreen(el)
+    expect((el as unknown as { webkitRequestFullScreen: () => void }).webkitRequestFullScreen).toHaveBeenCalledOnce()
+  })
+
+  it('mozRequestFullScreen', () => {
+    const el = { mozRequestFullScreen: vi.fn() } as unknown as HTMLElement
+    openFullScreen(el)
+    expect((el as unknown as { mozRequestFullScreen: () => void }).mozRequestFullScreen).toHaveBeenCalledOnce()
+  })
+
+  it('msRequestFullscreen', () => {
+    const el = { msRequestFullscreen: vi.fn() } as unknown as HTMLElement
+    openFullScreen(el)
+    expect((el as unknown as { msRequestFullscreen: () => void }).msRequestFullscreen).toHaveBeenCalledOnce()
+  })
 })
 
 // exitFullScreen
@@ -68,9 +88,45 @@ it('exitFullScreen 调用 exitFullscreen', () => {
   document.exitFullscreen = orig
 })
 
+describe('exitFullScreen 厂商前缀回退', () => {
+  it('webkitCancelFullScreen', () => {
+    const orig = document.exitFullscreen
+    Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: undefined })
+    const fn = vi.fn()
+    ;(document as any).webkitCancelFullScreen = fn
+
+    exitFullScreen()
+
+    expect(fn).toHaveBeenCalledOnce()
+    delete (document as any).webkitCancelFullScreen
+    Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: orig })
+  })
+})
+
 // getDpi
 it('getDpi 通过 devicePixelRatio 计算', () => {
-  expect(getDpi()).toBe(Math.round(window.devicePixelRatio * 96))
+  const orig = window.devicePixelRatio
+  Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: 2 })
+
+  expect(getDpi()).toBe(192)
+
+  Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: orig })
+})
+
+it('getDpi devicePixelRatio 不可用时用 matchMedia 二分查找', () => {
+  const origDpr = window.devicePixelRatio
+  const origMatchMedia = window.matchMedia
+
+  Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: 0 })
+  window.matchMedia = ((query: string) => {
+    const dpi = Number(/max-resolution:\s*(\d+)dpi/.exec(query)?.[1] ?? 0)
+    return { matches: dpi >= 96, media: query } as MediaQueryList
+  }) as typeof window.matchMedia
+
+  expect(getDpi()).toBe(96)
+
+  Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: origDpr })
+  window.matchMedia = origMatchMedia
 })
 
 // 单位转换
@@ -111,37 +167,28 @@ describe('translateUnit 单位转换', () => {
 // getImgSize
 it('getImgSize 返回图片宽高', async () => {
   const origImage = globalThis.Image
-
-  let imgInstance: any = null
-  ;(globalThis as any).Image = vi.fn().mockImplementation(function (this: any) {
-    imgInstance = this
-    this.width = 0
-    this.height = 0
-    return this
-  })
+  const imageMock = vi.fn()
+  ;(globalThis as any).Image = imageMock
 
   const promise = getImgSize('test.jpg')
+  const imgInstance = imageMock.mock.instances[0] as any
   // 同步触发 onload
   imgInstance.width = 800
   imgInstance.height = 600
   imgInstance.onload()
 
   await expect(promise).resolves.toEqual({ width: 800, height: 600 })
+  expect(imgInstance.src).toContain('test.jpg')
   globalThis.Image = origImage
 })
 
 it('getImgSize 图片加载失败', async () => {
   const origImage = globalThis.Image
-
-  let imgInstance: any = null
-  ;(globalThis as any).Image = vi.fn().mockImplementation(function (this: any) {
-    imgInstance = this
-    this.width = 0
-    this.height = 0
-    return this
-  })
+  const imageMock = vi.fn()
+  ;(globalThis as any).Image = imageMock
 
   const promise = getImgSize('bad.jpg')
+  const imgInstance = imageMock.mock.instances[0] as any
   // 同步触发 onerror
   imgInstance.onerror(new Error('图片加载失败'))
 

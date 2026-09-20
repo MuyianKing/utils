@@ -14,15 +14,13 @@ export function treeToTable(tree_data: TreeType[]) {
   // 计算rowspan
   function compRow(data: TreeType[]) {
     data.forEach((item) => {
-      if (item.next) {
+      if (item.next && item.next.length > 0) {
         compRow(item.next)
-        item.rowspan = 0
+        let rowspan = 0
         item.next.forEach((row) => {
-          if (!item.rowspan) {
-            item.rowspan = 0
-          }
-          item.rowspan += row.rowspan || 0
+          rowspan += row.rowspan || 0
         })
+        item.rowspan = rowspan
       } else {
         item.rowspan = 1
       }
@@ -62,11 +60,12 @@ export function treeToTable(tree_data: TreeType[]) {
 
   // 树形结构转table
   function getAllPath(tree: TreeType[]): TreeType[][] {
-    const paths = []
+    const paths: TreeType[][] = []
     for (let i = 0; i < tree.length; i++) {
-      if (tree[i].next) {
+      const next = tree[i].next
+      if (next && next.length > 0) {
         // 如果有子节点便继续深入，直到到达叶子节点
-        const res = getAllPath(tree[i].next as TreeType[])
+        const res = getAllPath(next)
 
         // 遍历最后一层的节点，生成路径
         for (let j = 0; j < res.length; j++) {

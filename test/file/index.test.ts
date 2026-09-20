@@ -1,39 +1,39 @@
+import { AUDIO_SUFFIX, download, FILE_SUFFIX, fileToBlob, getBlobFromUrl, IMAGE_SUFFIX, readBlobAsJSON, UPLOAD_FILE_MAX_SIZE, UPLOAD_VIDEO_MAX_SIZE, VIDEO_SUFFIX } from '@core'
 // @vitest-environment jsdom
 import { beforeEach, expect, it, vi } from 'vitest'
-import { UPLOAD_FILE_MAX_SIZE, UPLOAD_VIDEO_MAX_SIZE, FILE_SUFFIX, VIDEO_SUFFIX, IMAGE_SUFFIX, AUDIO_SUFFIX, download, readBlobAsJSON, getBlobFromUrl, fileToBlob } from '@core'
 
 beforeEach(() => {
   vi.restoreAllMocks()
 })
 
 // 常量
-it('UPLOAD_FILE_MAX_SIZE = 10', () => {
+it('uPLOAD_FILE_MAX_SIZE = 10', () => {
   expect(UPLOAD_FILE_MAX_SIZE).toBe(10)
 })
 
-it('UPLOAD_VIDEO_MAX_SIZE = 500', () => {
+it('uPLOAD_VIDEO_MAX_SIZE = 500', () => {
   expect(UPLOAD_VIDEO_MAX_SIZE).toBe(500)
 })
 
-it('FILE_SUFFIX 附件格式', () => {
+it('fILE_SUFFIX 附件格式', () => {
   expect(FILE_SUFFIX).toContain('doc')
   expect(FILE_SUFFIX).toContain('pdf')
   expect(FILE_SUFFIX).toContain('zip')
 })
 
-it('VIDEO_SUFFIX 视频格式', () => {
+it('vIDEO_SUFFIX 视频格式', () => {
   expect(VIDEO_SUFFIX).toContain('mp4')
   expect(VIDEO_SUFFIX).toContain('m3u8')
   expect(VIDEO_SUFFIX).toContain('avi')
 })
 
-it('IMAGE_SUFFIX 图片格式', () => {
+it('iMAGE_SUFFIX 图片格式', () => {
   expect(IMAGE_SUFFIX).toContain('jpg')
   expect(IMAGE_SUFFIX).toContain('png')
   expect(IMAGE_SUFFIX).toContain('gif')
 })
 
-it('AUDIO_SUFFIX 音频格式', () => {
+it('aUDIO_SUFFIX 音频格式', () => {
   expect(AUDIO_SUFFIX).toContain('mp3')
   expect(AUDIO_SUFFIX).toContain('wav')
   expect(AUDIO_SUFFIX).toContain('m4a')
@@ -108,6 +108,16 @@ it('readBlobAsJSON 读取数组JSON', async () => {
   const data = [1, 2, 3]
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
   await expect(readBlobAsJSON(blob)).resolves.toEqual(data)
+})
+
+it('readBlobAsJSON 内容不是合法 JSON 时 reject，而不是一直 pending', async () => {
+  const blob = new Blob(['not json'], { type: 'application/json' })
+  await expect(readBlobAsJSON(blob)).rejects.toThrow('JSON 解析失败')
+})
+
+it('readBlobAsJSON 支持泛型指定返回类型', async () => {
+  const blob = new Blob([JSON.stringify({ a: 1 })], { type: 'application/json' })
+  await expect(readBlobAsJSON<{ a: number }>(blob)).resolves.toEqual({ a: 1 })
 })
 
 // getBlobFromUrl

@@ -1,8 +1,8 @@
 /**
  * 进入全屏
- * @param el 进入全屏元素
+ * @param el 进入全屏元素，不传时使用 document.body
  */
-export function openFullScreen(el: HTMLElement) {
+export function openFullScreen(el?: HTMLElement) {
   const docElm = el || document.body
   if (docElm.requestFullscreen) {
     docElm.requestFullscreen()

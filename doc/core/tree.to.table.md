@@ -14,8 +14,8 @@ function treeToTable(tree_data: TreeType[]): TreeType[][]
 
 **参数**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数      | 类型         | 说明     |
+| --------- | ------------ | -------- |
 | tree_data | `TreeType[]` | 树形数据 |
 
 **TreeType**
@@ -32,8 +32,8 @@ interface TreeType {
 
 - `rowspan` — 行合并数（自动计算）
 - `colspan` — 列合并数（自动计算）
-- `append` — 是否是追加的占位列
-- `next` — 子节点
+- `append` — 内部去重标记，仅计算过程中使用，返回前会被删除
+- `next` — 子节点，**只识别 `next` 字段**（写成 `children` 不会被当作子节点）
 
 **返回**: `TreeType[][]` — 二维数组，每个内部数组代表表格的一行
 
@@ -43,21 +43,30 @@ interface TreeType {
 const tree = [
   {
     name: 'A',
-    children: [
+    next: [
       { name: 'A1' },
       { name: 'A2' },
     ],
   },
   {
     name: 'B',
-    children: [
+    next: [
       { name: 'B1' },
     ],
   },
 ]
 
 const table = treeToTable(tree)
-// 输出适合渲染 HTML 表格的二维数组
+// [
+//   [{ name: 'A', rowspan: 2 }, { name: 'A1', rowspan: 1, colspan: 1 }],
+//   [{ name: 'A2', rowspan: 1, colspan: 1 }],
+//   [{ name: 'B', rowspan: 1 }, { name: 'B1', rowspan: 1, colspan: 1 }],
+// ]
 ```
 
-**算法**: 递归遍历树形结构，向下传递当前未闭合的节点，计算每个节点在每一层级的 `rowspan`，通过 `colspan` 参数追踪列位置。
+**算法**
+
+- `rowspan`：有子节点时等于所有子节点 `rowspan` 之和，叶子节点为 `1`
+- `colspan`：仅有叶子节点会被赋值，为 `最大深度 - 当前层级`
+- 生成行时，每棵子树的**第一个**叶子会带上完整的父节点路径；同一父节点下的其他叶子单独成行（父节点单元格已由 `rowspan` 跨行覆盖）
+- 内部先用 `cloneDeep` 复制入参，返回的节点是副本，不会修改原始数据；返回前会删除 `next` 与 `append` 字段

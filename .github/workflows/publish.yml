@@ -8,8 +8,8 @@ on:
       - v*
 
 permissions:
-  contents: write   # 写权限用于创建 GitHub Release
-  id-token: write   # Required for OIDC
+  contents: write # 写权限用于创建 GitHub Release
+  id-token: write # Required for OIDC
 
 jobs:
   publish:
@@ -21,17 +21,25 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: latest
+          # 固定版本：pnpm 大版本会改变 lockfile 校验规则，跟随 latest 曾导致
+          # --frozen-lockfile 在升级后直接失败
+          version: 12.5.1
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org/'
-          cache: 'pnpm'
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
 
       - name: npm build
         run: pnpm build
@@ -43,7 +51,7 @@ jobs:
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
           prerelease: false
           files: |
             dist/

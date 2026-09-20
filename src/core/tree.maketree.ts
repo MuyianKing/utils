@@ -16,6 +16,8 @@ interface ConfigType {
  */
 export function makeTree<T>(list: T[], config?: ConfigType): T[] {
   const tree_map: Record<string, any> = {}
+  // 入参里真实出现过的节点，用于区分"父节点不在列表里"时生成的占位对象
+  const real_keys = new Set<string>()
 
   const _config = config || {}
   const props = _config.props || {}
@@ -26,6 +28,7 @@ export function makeTree<T>(list: T[], config?: ConfigType): T[] {
 
   list.forEach((item) => {
     const key = (item as any)[value]
+    real_keys.add(String(key))
 
     if (!tree_map[key]) {
       tree_map[key] = {}
@@ -72,8 +75,9 @@ export function makeTree<T>(list: T[], config?: ConfigType): T[] {
   if (config?.rootCheck) {
     rootCheck = config.rootCheck
   } else {
-    // 默认值为falsity则为根节点
-    rootCheck = (item: any) => !(item as any)[parent]
+    // 默认值为falsity则为根节点，且必须是入参里真实出现过的节点
+    // （否则子节点引用了不存在的父节点时，占位对象会被当成根节点，返回空节点）
+    rootCheck = (item: any) => !item[parent] && real_keys.has(String(item[value]))
   }
 
   // 寻找根节点

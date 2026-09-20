@@ -3,8 +3,7 @@ import { vi } from 'vitest'
 // 在 jsdom 或 Node 环境下提供 localStorage polyfill
 // 解决 jsdom 29 opaque origin + Node.js 25 实验性 localStorage 的兼容问题
 if (typeof globalThis.localStorage === 'undefined'
-  || typeof globalThis.localStorage.getItem !== 'function'
-) {
+  || typeof globalThis.localStorage.getItem !== 'function') {
   const storage = new Map<string, string>()
 
   Object.defineProperty(globalThis, 'localStorage', {

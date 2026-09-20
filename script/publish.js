@@ -6,13 +6,12 @@ import fsExtra from 'fs-extra'
 import ora from 'ora'
 import getObjectFromJson from './utils/getObjectFromJson.js'
 
-const __dirname = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function publish() {
   const spinner = ora(`create package.json`).start()
 
-  const _path = `../../package.json`
-  const package_path = path.resolve(__dirname, _path)
+  const package_path = path.resolve(__dirname, '../package.json')
   const _config = getObjectFromJson(package_path)
 
   let version = `v${_config.version}`
@@ -20,6 +19,11 @@ async function publish() {
 
   // 如果外部传入版本号则以外部为准
   if (params.v) {
+    if (!/^\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(params.v)) {
+      spinner.fail(`版本号格式非法：${params.v}，应形如 0.1.4`)
+      process.exit(1)
+    }
+
     version = `v${params.v}`
     _config.version = params.v
 
@@ -48,6 +52,7 @@ async function publish() {
   } catch (error) {
     spinner.fail('spinner')
     console.log(error)
+    process.exitCode = 1
   }
 }
 
@@ -68,14 +73,14 @@ function exec(cmd) {
   })
 }
 
-// 获取参数
+// 获取参数，支持 v=0.1.4 与 --v=0.1.4 两种写法
 function getParams() {
   const params = {}
   process.argv.forEach((item) => {
-    item = item.split('=')
+    const [key, value] = item.split('=')
 
-    if (item.length === 2) {
-      params[item[0]] = item[1]
+    if (value !== undefined) {
+      params[key.replace(/^-+/, '')] = value
     }
   })
 

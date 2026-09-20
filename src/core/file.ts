@@ -126,15 +126,22 @@ export function fileToBlob(file: File, type: string): Promise<Blob> {
 /**
  * 将blob转为json
  * @param blob blob数据
+ * @returns 解析结果，读取失败或内容不是合法 JSON 时 reject
  */
-export function readBlobAsJSON(blob: Blob): Promise<any> {
-  return new Promise((resolve) => {
+export function readBlobAsJSON<T = any>(blob: Blob): Promise<T> {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.readAsText(blob)
     reader.onload = function () {
-      const json = JSON.parse(reader.result as string)
-      resolve(json)
+      try {
+        resolve(JSON.parse(reader.result as string))
+      } catch (e) {
+        reject(new Error(`JSON 解析失败：${(e as Error).message}`))
+      }
     }
+    reader.onerror = function () {
+      reject(reader.error || new Error('文件读取失败'))
+    }
+    reader.readAsText(blob)
   })
 }
 
