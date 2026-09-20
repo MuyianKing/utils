@@ -16,7 +16,9 @@
 
 ### BREAKING CHANGES
 
-* 移除 v_* 表单校验器（改用新导出的 isInt/isPort/isEmail/isIP/isLatLong/isMobilePhone 六个纯函数）；移除 src/core/api.ts（generateApis/useURL/addPrefixToUrls）；storage 去掉 MU_ 前缀与 setKey 方法，缓存键原样存入 localStorage。
+* 移除 v_* 表单校验器（改用新导出的 isInt/isPort/isEmail/isIP/isLatLong/isMobilePhone 六个纯函数）；
+* 移除 src/core/api.ts（generateApis/useURL/addPrefixToUrls）；
++ storage 去掉 MU_ 前缀与 setKey 方法，缓存键原样存入 localStorage。
 
 ## [0.1.3](https://github.com/MuyianKing/utils/compare/v0.1.2...v0.1.3) (2026-06-07)
 
