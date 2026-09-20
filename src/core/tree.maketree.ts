@@ -11,8 +11,20 @@ interface ConfigType {
 
 /**
  * 将平面结构变为树形结构
- * @param list 数组
+ * @param list 扁平数组
  * @param config 配置
+ * @param config.rootCheck 自定义根节点判断函数，默认 parent 为假值且该节点在 list 中真实出现过
+ * @param config.extend_keys 需要保留到结果节点上的额外字段名
+ * @param config.props 字段名映射
+ * @param config.props.label 标签字段名，默认 'label'
+ * @param config.props.children 子节点字段名，默认 'children'
+ * @param config.props.value 值字段名，默认 'value'
+ * @param config.props.parent 父节点字段名，默认 'parent'
+ * @returns 树形结构，list 为空数组时返回 []
+ * @throws 入参非空但找不到根节点时抛 Error('未找到根节点')
+ * @example makeTree([{ label: '根节点', value: 1 }, { label: '子节点', value: 2, parent: 1 }])
+ * @example makeTree(list, { props: { label: 'name', value: 'id', parent: 'parentId' } }) // 自定义字段名
+ * @example makeTree(list, { extend_keys: ['disabled'], rootCheck: item => !!item.root }) // 保留额外字段并自定义根节点规则
  */
 export function makeTree<T>(list: T[], config?: ConfigType): T[] {
   const tree_map: Record<string, any> = {}

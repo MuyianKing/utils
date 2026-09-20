@@ -1,6 +1,8 @@
 /**
  * 进入全屏
  * @param el 进入全屏元素，不传时使用 document.body
+ * @example openFullScreen(document.getElementById('myDiv')!) // 指定元素全屏
+ * @example openFullScreen() // document.body 全屏
  */
 export function openFullScreen(el?: HTMLElement) {
   const docElm = el || document.body
@@ -17,6 +19,7 @@ export function openFullScreen(el?: HTMLElement) {
 
 /**
  * 退出全屏
+ * @example exitFullScreen()
  */
 export function exitFullScreen() {
   const _document = document
@@ -33,7 +36,9 @@ export function exitFullScreen() {
 
 /**
  * 判断内容是否溢出
- * @param {Dom} el
+ * @param el 待判断的 DOM 元素
+ * @returns 内容宽度或高度超出容器时返回 true，否则返回 false
+ * @example isOverflow(document.querySelector('.text-box')!) // true（内容溢出）
  */
 export function isOverflow(el: HTMLElement) {
   return el.clientWidth < el.scrollWidth
@@ -42,8 +47,9 @@ export function isOverflow(el: HTMLElement) {
 
 /**
  * 获取图片宽高
- * @param src 图片资源
- * @returns 宽高
+ * @param src 图片资源地址
+ * @returns 图片原始宽高，加载失败时 reject Error('图片加载失败')
+ * @example const { width, height } = await getImgSize('https://example.com/image.jpg')
  */
 export function getImgSize(src: string): Promise<{ width: number, height: number }> {
   return new Promise((resolve, reject) => {
@@ -66,7 +72,8 @@ export function getImgSize(src: string): Promise<{ width: number, height: number
 
 /**
  * 获取dpi
- * @returns dpi
+ * @returns 当前设备 dpi，优先用 devicePixelRatio 估算，取不到时用 matchMedia 二分查找
+ * @example getDpi() // 96（标准屏幕）或 192（Retina 屏幕）
  */
 export function getDpi(): number {
   // 优先使用 devicePixelRatio 估算，避免线性循环
@@ -90,7 +97,8 @@ export function getDpi(): number {
 /**
  * 将指定的长度转换为对应的像素值
  * @param num 长度，单位mm
- * @returns 像素
+ * @returns 像素值，公式为 getDpi() / 25.4 * num
+ * @example getPxBymm(25.4) // 96（在 96dpi 下）
  */
 export function getPxBymm(num: number): number {
   const dpi = getDpi()
@@ -99,7 +107,9 @@ export function getPxBymm(num: number): number {
 
 /**
  * px=>pt
- * @param num
+ * @param num 像素值
+ * @returns 点值，公式为 num / (getDpi() / 72)
+ * @example getPtByPx(96) // 72（在 96dpi 下）
  */
 export function getPtByPx(num: number): number {
   return num / (getDpi() / 72)
@@ -107,7 +117,9 @@ export function getPtByPx(num: number): number {
 
 /**
  * mm=>pt
- * @param num
+ * @param num 毫米值
+ * @returns 点值，公式为 getPtByPx(getPxBymm(num))
+ * @example getPtBymm(25.4) // 72（在 96dpi 下）
  */
 export function getPtBymm(num: number): number {
   return getPtByPx(getPxBymm(num))
@@ -115,7 +127,9 @@ export function getPtBymm(num: number): number {
 
 /**
  * px=>mm
- * @param num
+ * @param num 像素值
+ * @returns 毫米值，公式为 num / (getDpi() / 25.4)
+ * @example getMmByPx(96) // 25.4（在 96dpi 下）
  */
 export function getMmByPx(num: number): number {
   return num / (getDpi() / 25.4)
@@ -124,8 +138,12 @@ export function getMmByPx(num: number): number {
 /**
  * 单位转换
  * @param num 转换的值
- * @param from px pt mm
- * @param to px pt mm
+ * @param from 源单位 px pt mm
+ * @param to 目标单位 px pt mm
+ * @returns 转换结果，未知组合返回 0
+ * @example translateUnit(25.4, 'mm', 'px') // 96（在 96dpi 下）
+ * @example translateUnit(96, 'px', 'pt') // 72
+ * @example translateUnit(10, 'px', 'cm') // 0（不支持的组合）
  */
 export function translateUnit(num: number, from: string, to: string): number {
   const translator = `${from}_${to}`

@@ -13,8 +13,12 @@ export const AUDIO_SUFFIX = ['mp3', 'wav', 'm4a']
 
 /**
  * 获取后缀
- * @param  fileName 文件名
- * @returns 小写后缀
+ * @param fileName 文件名
+ * @returns 小写后缀，无后缀或文件名为空时返回空字符串
+ * @example getSuffix('test.mp4') // 'mp4'
+ * @example getSuffix('test.2.MP4') // 'mp4'
+ * @example getSuffix('test') // ''
+ * @example getSuffix('') // ''
  */
 export function getSuffix(fileName: string): string {
   if (fileName === '') {
@@ -30,7 +34,11 @@ export function getSuffix(fileName: string): string {
 
 /**
  * 获取指定文件类型的MIME类型
- * @param types
+ * @param types 单个后缀或后缀数组
+ * @returns 入参为字符串时返回字符串（查不到返回空字符串），入参为数组时返回 MIME 类型数组
+ * @example getMimeType('jpg') // 'image/jpeg'
+ * @example getMimeType(['jpg', 'png']) // ['image/jpeg', 'image/png']
+ * @example getMimeType('unknown') // ''
  */
 export function getMimeType<T extends string[] | string>(types: T): T extends string[] ? string[] : string {
   type return_type = T extends string[] ? string[] : string
@@ -44,8 +52,13 @@ export function getMimeType<T extends string[] | string>(types: T): T extends st
 
 /**
  * 根据文件名获取文件类型
- * @param file_name 文件名
- * @returns type
+ * @param file_name 文件名，不区分大小写
+ * @returns 'image'、'video'、'audio'、'file' 或 ''（无法识别）
+ * @example getType('test.jpg') // 'image'
+ * @example getType('test.mp4') // 'video'
+ * @example getType('test.mp3') // 'audio'
+ * @example getType('test.pdf') // 'file'
+ * @example getType('test.xyz') // ''
  */
 export function getType(file_name: string) {
   if (!file_name) {
@@ -76,8 +89,10 @@ export function getType(file_name: string) {
 
 /**
  * 下载文件
- * @param url 下载地址
+ * @param url 下载地址，blob: 开头的地址会在下载后释放
  * @param name 下载保存的文件名
+ * @example download('https://example.com/file.pdf', 'report.pdf')
+ * @example download('blob:http://example.com/uuid', 'image.png')
  */
 export function download(url: string, name: string): void {
   const link = document.createElement('a')
@@ -95,7 +110,8 @@ export function download(url: string, name: string): void {
 /**
  * 文件地址转Blob对象
  * @param url 文件地址
- * @returns Blob
+ * @returns Blob 对象，请求失败时 reject
+ * @example const blob = await getBlobFromUrl('https://example.com/file.pdf')
  */
 export async function getBlobFromUrl(url: string) {
   const response = await fetch(url)
@@ -104,9 +120,10 @@ export async function getBlobFromUrl(url: string) {
 
 /**
  * File转blob
- * @param file
+ * @param file File 对象
  * @param type 文件的mime_type,如text/plain
- * @returns Blob
+ * @returns Blob 对象，读取结果为空时 reject Error('转换失败')
+ * @example const blob = await fileToBlob(file, 'text/plain')
  */
 export function fileToBlob(file: File, type: string): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -127,6 +144,8 @@ export function fileToBlob(file: File, type: string): Promise<Blob> {
  * 将blob转为json
  * @param blob blob数据
  * @returns 解析结果，读取失败或内容不是合法 JSON 时 reject
+ * @example const data = await readBlobAsJSON(blob)
+ * @example const user = await readBlobAsJSON<User>(blob) // 泛型指定解析结果类型
  */
 export function readBlobAsJSON<T = any>(blob: Blob): Promise<T> {
   return new Promise((resolve, reject) => {

@@ -11,10 +11,12 @@ interface StorageItem<T = string | object> {
 
 /**
  * 设置缓存
- * @param key
- * @param value
- * @param options
+ * @param key 缓存的键名，空字符串不写入
+ * @param value 缓存的值，undefined 不写入
+ * @param options 配置
  * @param options.expire 有效期 单位天，默认7天
+ * @example storage.set('token', 'abc123')
+ * @example storage.set('user', { name: '张三' }, { expire: 30 })
  */
 function set(key: string, value: string | object, options: { expire?: number } = {}): void {
   if (!key) {
@@ -27,9 +29,13 @@ function set(key: string, value: string | object, options: { expire?: number } =
 
 /**
  * 获取缓存
- * @param key
- * @param options
- * @param options.def 取不到时的默认值
+ * @param key 缓存的键名
+ * @param options 配置
+ * @param options.def 取不到时的默认值，未传时返回空字符串
+ * @returns 缓存值或默认值，已过期的缓存会被删除并返回默认值
+ * @example storage.get('token') // 'abc123'
+ * @example storage.get('not-exist') // ''
+ * @example storage.get('not-exist', { def: 'default' }) // 'default'
  */
 function get<T extends string | object = string | object>(key: string, options?: { def?: T }): T {
   return storeGet(key, options?.def ?? '') as T
@@ -37,7 +43,8 @@ function get<T extends string | object = string | object>(key: string, options?:
 
 /**
  * 删除缓存
- * @param {string} key
+ * @param key 缓存的键名
+ * @example storage.remove('token')
  */
 function remove(key: string): void {
   storeRemove(key)
@@ -45,6 +52,8 @@ function remove(key: string): void {
 
 /**
  * 判断是否 localStorage 空间不足
+ * @param e 捕获到的异常
+ * @returns 是空间不足错误返回 true，否则返回 false
  */
 function isQuotaExceededError(e: unknown): boolean {
   if (typeof DOMException !== 'undefined' && e instanceof DOMException) {
@@ -62,6 +71,7 @@ function isQuotaExceededError(e: unknown): boolean {
 /**
  * 读取登记表：记录写入过的 key，空间不足时按它清理
  * 登记表自身的 key 是模块内部约定，不是公开 API
+ * @returns 已登记的 key 数组，登记表缺失或格式非法时返回空数组
  */
 function readRegisteredKeys(): string[] {
   const keys = jsonparse<string[]>(localStorage.getItem('MU_KEYS') || '', [])
@@ -71,6 +81,7 @@ function readRegisteredKeys(): string[] {
 
 /**
  * 写入登记表
+ * @param keys 完整的 key 数组
  */
 function writeRegisteredKeys(keys: string[]): void {
   localStorage.setItem('MU_KEYS', JSON.stringify(keys))
@@ -78,6 +89,7 @@ function writeRegisteredKeys(keys: string[]): void {
 
 /**
  * 登记key
+ * @param key 需要登记的 key，已登记过时不重复写入
  */
 function registerKey(key: string): void {
   const keys = readRegisteredKeys()
@@ -89,6 +101,8 @@ function registerKey(key: string): void {
 
 /**
  * 读取单条缓存原始结构
+ * @param key 缓存的键名
+ * @returns { value, time } 结构，取不到或格式非法时返回 null
  */
 function readItem(key: string): StorageItem | null {
   const raw = localStorage.getItem(key)
@@ -109,6 +123,7 @@ function readItem(key: string): StorageItem | null {
 
 /**
  * 批量删除缓存并同步登记表
+ * @param keys 需要删除的 key 数组，为空时不做任何操作
  */
 function removeKeys(keys: string[]): void {
   if (keys.length === 0) {
@@ -123,6 +138,7 @@ function removeKeys(keys: string[]): void {
 
 /**
  * 删除缓存并同步登记表
+ * @param key 缓存的键名
  */
 function storeRemove(key: string): void {
   removeKeys([key])
@@ -130,6 +146,9 @@ function storeRemove(key: string): void {
 
 /**
  * 存入
+ * @param key 缓存的键名
+ * @param value 缓存的值
+ * @param expire 有效期，单位天
  */
 function storeSetItem(key: string, value: string | object, expire: number): void {
   localStorage.setItem(key, JSON.stringify({
@@ -140,6 +159,9 @@ function storeSetItem(key: string, value: string | object, expire: number): void
 
 /**
  * 设置缓存，空间不足时清理后重试
+ * @param key 缓存的键名，空字符串不写入
+ * @param value 缓存的值，undefined 不写入
+ * @param expire 有效期，单位天
  */
 function storeSet(key: string, value: string | object, expire: number): void {
   if (!key || value === undefined) {
@@ -200,6 +222,9 @@ function purgeForQuota(callback: () => void): void {
 
 /**
  * 获取缓存
+ * @param key 缓存的键名
+ * @param def 取不到或已过期时的默认值
+ * @returns 缓存值或默认值
  */
 function storeGet(key: string, def: string | object): string | object {
   const item = localStorage.getItem(key)

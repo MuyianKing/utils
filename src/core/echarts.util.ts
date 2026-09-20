@@ -19,6 +19,12 @@ const resizeListeners = new WeakMap<HTMLElement, () => void>()
 
 /**
  * 处理参数默认值
+ * @param params 配置
+ * @param params.resize 是否注册 resize 监听，默认 true
+ * @param params.overflow 容器 overflow 样式，默认 'hidden'
+ * @returns 补全默认值后的配置
+ * @example echartsUtil.assignConfig({}) // { resize: true, overflow: 'hidden' }
+ * @example echartsUtil.assignConfig({ resize: false }) // { resize: false, overflow: 'hidden' }
  */
 function assignConfig(params: Config): RequiredConfig {
   return {
@@ -31,7 +37,13 @@ function assignConfig(params: Config): RequiredConfig {
  * 初始化echarts
  * @param container 容器ID||容器dom
  * @param options echarts配置
- * @param {object} params 其他配置(默认配置中的配置)
+ * @param params 其他配置(默认配置中的配置)
+ * @param params.resize 是否注册 resize 监听，默认 true
+ * @param params.overflow 容器 overflow 样式，默认 'hidden'
+ * @returns echarts 实例
+ * @throws 容器为空时抛 Error('请设置容器')，按 ID 找不到元素时抛 Error('请设置合法的容器')
+ * @example const chart = echartsUtil.init('myChart', { xAxis: { data: ['A', 'B'] }, yAxis: {}, series: [{ type: 'bar', data: [10, 20] }] })
+ * @example echartsUtil.init(document.getElementById('myChart')!, {}, { resize: false, overflow: 'auto' })
  */
 function init(container: string | HTMLElement, options: EChartsOption, params: Config = {}) {
   if (!container) {
@@ -85,6 +97,10 @@ function init(container: string | HTMLElement, options: EChartsOption, params: C
 
 /**
  * 注册地图
+ * @param name 地图名称，注册后可在配置中通过 geo.map 使用
+ * @param source 地图 GeoJSON 数据
+ * @example echartsUtil.registerMap('china', chinaGeoJSON)
+ * @example echartsUtil.init('mapChart', { geo: { map: 'china' } })
  */
 function registerMap(name: string, source: GeoJSON) {
   echarts.registerMap(name, source)

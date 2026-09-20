@@ -1,4 +1,11 @@
-// 判断身份证号是否合法
+/**
+ * 判断身份证号是否合法
+ * @param code 身份证号，支持 15 位与 18 位（18 位会校验最后一位校验码）
+ * @returns 合法返回 true，否则返回 false
+ * @example isIdNum('11010519491231002X') // true
+ * @example isIdNum('110105194912310020') // false（校验位错误）
+ * @example isIdNum('123') // false
+ */
 export function isIdNum(code: string) {
   const city: {
     [x: string]: string
@@ -64,7 +71,14 @@ export function isIdNum(code: string) {
   return pass
 }
 
-// 判断对象给定的字段是否存在空值、null、undefined、0
+/**
+ * 判断对象给定的字段是否存在空值、null、undefined、0
+ * @param obj 待检查的对象
+ * @param keys 需要检查的字段名数组
+ * @returns 任一字段为空值返回 true，所有字段都有值返回 false
+ * @example isObjectEmpty({ a: '', b: 'hello' }, ['a']) // true
+ * @example isObjectEmpty({ a: 'hello', b: 'world' }, ['a', 'b']) // false
+ */
 export function isObjectEmpty<T>(obj: T, keys: (keyof T)[]): boolean {
   for (let i = 0; i < keys.length; i++) {
     if (!obj[keys[i]]) {
@@ -74,7 +88,14 @@ export function isObjectEmpty<T>(obj: T, keys: (keyof T)[]): boolean {
   return false
 }
 
-// 检查是否是json字符串
+/**
+ * 检查是否是json字符串
+ * @param str 待检查的字符串
+ * @returns 是合法 JSON 返回 true，否则返回 false
+ * @example isJson('{"a":1}') // true
+ * @example isJson('[]') // true
+ * @example isJson('abc') // false
+ */
 export function isJson(str: string): boolean {
   try {
     JSON.parse(str)
@@ -84,20 +105,39 @@ export function isJson(str: string): boolean {
   }
 }
 
-// 校验是否是电话号码
+/**
+ * 校验是否是电话号码（座机号码，5 位以上纯数字）
+ * @param val 待校验的字符串
+ * @returns 合法返回 true，否则返回 false
+ * @example isTelphone('12345') // true
+ * @example isTelphone('07551234567') // true
+ * @example isTelphone('123') // false
+ */
 export function isTelphone(val: string): boolean {
   const testFixedPhone = /^\d{5,}$/
   return testFixedPhone.test(val)
 }
 
-// 验证大陆身份证号或者港澳台身份证号或者护照
+/**
+ * 验证大陆身份证号或者港澳台身份证号或者护照
+ * @param value 待校验的字符串
+ * @returns 任一格式匹配或为空字符串返回 true，否则返回 false
+ * @example isIdcardAll('11010519491231002X') // true（大陆）
+ * @example isIdcardAll('A123456') // true（港澳）
+ * @example isIdcardAll('') // true（空值）
+ * @example isIdcardAll('abc') // false
+ */
 export function isIdcardAll(value: string): boolean {
   return isGangAo(value) || isTaiwan(value) || isIdNum(value) || value === ''
 }
 
 /**
  * 校验是否为合法港澳身份证
- * @param value
+ * @param value 待校验的字符串，格式为 1 位大写字母 + 6-10 位数字，可选 `(字母)` 后缀
+ * @returns 合法返回 true，否则返回 false
+ * @example isGangAo('A123456') // true
+ * @example isGangAo('A123456(8)') // true
+ * @example isGangAo('123') // false
  */
 export function isGangAo(value: string): boolean {
   const testHongKong = /^[A-Z]\d{6,10}(?:\(\w\))?$/
@@ -106,7 +146,11 @@ export function isGangAo(value: string): boolean {
 
 /**
  * 校验是否为合法台湾身份证
- * @param value
+ * @param value 待校验的字符串，格式为 1-2 位大写字母 + 8 位数字，可选 2 位数字后缀
+ * @returns 合法返回 true，否则返回 false
+ * @example isTaiwan('AB12345678') // true
+ * @example isTaiwan('A1234567890') // true
+ * @example isTaiwan('123') // false
  */
 export function isTaiwan(value: string): boolean {
   const testTaiwan = /^[A-Z]{1,2}\d{8}(?:\d{2})?$/
@@ -115,8 +159,10 @@ export function isTaiwan(value: string): boolean {
 
 /**
  * 校验是否为整数（允许正负号与前导零）
- * @param value
+ * @param value 待校验的字符串
+ * @returns 合法返回 true，否则返回 false
  * @example isInt('123') // true
+ * @example isInt('-123') // true
  * @example isInt('12.5') // false
  */
 export function isInt(value: string): boolean {
@@ -125,8 +171,11 @@ export function isInt(value: string): boolean {
 
 /**
  * 校验是否为合法端口号（0 - 65535，不允许前导零）
- * @param value
+ * @param value 待校验的字符串
+ * @returns 合法返回 true，否则返回 false
  * @example isPort('443') // true
+ * @example isPort('0') // true
+ * @example isPort('080') // false（前导零）
  * @example isPort('70000') // false
  */
 export function isPort(value: string): boolean {
@@ -135,9 +184,12 @@ export function isPort(value: string): boolean {
 
 /**
  * 校验是否为合法邮箱（校验总长度、本地部分与域名分段）
- * @param value
- * @example isEmail('a@b.com') // true
+ * @param value 待校验的字符串，本地部分允许 UTF-8 字符或整体用引号包裹
+ * @returns 合法返回 true，否则返回 false
+ * @example isEmail('test@example.com') // true
+ * @example isEmail('"john..doe"@example.com') // true
  * @example isEmail('not-email') // false
+ * @example isEmail('a@b') // false（域名需要至少两段）
  */
 export function isEmail(value: string): boolean {
   if (value.length > 254) {
@@ -164,9 +216,12 @@ export function isEmail(value: string): boolean {
 
 /**
  * 校验是否为合法 IP，支持 IPv4 与 IPv6（`::` 压缩、IPv4 结尾、`%` 区域标识）
- * @param value
+ * @param value 待校验的字符串
+ * @returns 合法返回 true，否则返回 false
  * @example isIP('192.168.1.1') // true
  * @example isIP('2001:db8::1') // true
+ * @example isIP('fe80::1%eth0') // true
+ * @example isIP('999.999.999.999') // false
  */
 export function isIP(value: string): boolean {
   return ipv4Reg.test(value) || isIPV6(value)
@@ -174,8 +229,12 @@ export function isIP(value: string): boolean {
 
 /**
  * 校验是否为合法经纬度，格式为 "纬度,经度"（纬度 ±90 以内、经度 ±180 以内）
- * @param value
+ * @param value 待校验的字符串，纬度与经度以英文逗号分隔，可带括号
+ * @returns 合法返回 true，否则返回 false
  * @example isLatLong('39.9042,116.4074') // true
+ * @example isLatLong('90,180') // true
+ * @example isLatLong('91,0') // false
+ * @example isLatLong('39.9') // false（缺少逗号）
  */
 export function isLatLong(value: string): boolean {
   if (!value.includes(',')) {
@@ -192,9 +251,12 @@ export function isLatLong(value: string): boolean {
 
 /**
  * 校验是否为合法手机号，支持中国大陆、香港、澳门、台湾
- * @param value
+ * @param value 待校验的字符串，可带 `+86`、`+852` 等国际区号
+ * @returns 合法返回 true，否则返回 false
  * @example isMobilePhone('13800138000') // true
- * @example isMobilePhone('+85251234567') // true
+ * @example isMobilePhone('+8613800138000') // true
+ * @example isMobilePhone('+85251234567') // true（香港）
+ * @example isMobilePhone('1234') // false
  */
 export function isMobilePhone(value: string): boolean {
   return mobileRegs.some(reg => reg.test(value))
@@ -209,7 +271,11 @@ const intReg = /^[-+]?\d+$/
 // 端口号额外要求：不允许前导零
 const portReg = /^[-+]?(?:0|[1-9]\d*)$/
 
-// 域名：至少两段，顶级域不得为纯数字，不允许下划线、首尾连字符、全角字符
+/**
+ * 域名：至少两段，顶级域不得为纯数字，不允许下划线、首尾连字符、全角字符
+ * @param value 待校验的域名
+ * @returns 合法返回 true，否则返回 false
+ */
 function isDomain(value: string): boolean {
   const parts = value.split('.')
   if (parts.length < 2) {
@@ -240,6 +306,11 @@ const ipv4Reg = /^(?:(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(?:\d|[1-9]\d|1
 const ipv6GroupReg = /^[0-9a-f]{1,4}$/i
 const ipv6ZoneReg = /^[0-9a-z.]+$/i
 
+/**
+ * 校验是否为合法 IPv6 地址，支持 :: 压缩、IPv4 结尾以及 % 区域标识
+ * @param value 待校验的字符串
+ * @returns 合法返回 true，否则返回 false
+ */
 function isIPV6(value: string): boolean {
   const zoneIndex = value.indexOf('%')
   if (zoneIndex !== -1) {

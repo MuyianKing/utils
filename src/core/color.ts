@@ -5,6 +5,9 @@ const HEX_REG = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i
  * 归一化16进制颜色
  * @param color 颜色字符串，支持 #abc 与 #aabbcc
  * @returns 小写的6位16进制颜色（不含#），格式非法返回null
+ * @example normalizeHex('#abc') // 'aabbcc'
+ * @example normalizeHex(' #AABBCC ') // 'aabbcc'（会 trim）
+ * @example normalizeHex('abc') // null（没有 #）
  */
 export function normalizeHex(color: string): string | null {
   if (typeof color !== 'string') {
@@ -26,6 +29,8 @@ export function normalizeHex(color: string): string | null {
 
 /**
  * 6位16进制颜色转rgb
+ * @param hex 6位16进制颜色（不含#）
+ * @returns [r, g, b] 数组
  */
 function hexToRgb(hex: string): number[] {
   const arr: number[] = []
@@ -37,8 +42,11 @@ function hexToRgb(hex: string): number[] {
 
 /**
  * 16进制颜色转rgb
- * @param str
- * @return rgb
+ * @param str 16进制颜色，支持 #abc 与 #aabbcc（必须有#）
+ * @return rgb 数组，无效输入返回 null
+ * @example set16ToRgb('#fff') // [255, 255, 255]
+ * @example set16ToRgb('#ff0000') // [255, 0, 0]
+ * @example set16ToRgb('fff') // null（没有 #）
  */
 export function set16ToRgb(str: string): number[] | null {
   const hex = normalizeHex(str)
@@ -51,8 +59,11 @@ export function set16ToRgb(str: string): number[] | null {
 
 /**
  * 判断所给的颜色是不是亮色
- * @param color
- * @return true-亮色 false-暗色
+ * @param color 16进制颜色字符串或 [r, g, b] 数组
+ * @return true-亮色 false-暗色，颜色不合法（字符串无法解析或数组长度不足3）同样返回 false
+ * @example isLight('#ffffff') // true
+ * @example isLight('#000000') // false
+ * @example isLight([255, 255, 255]) // true
  */
 export function isLight(color: string | Array<number>): boolean {
   const _color = Array.isArray(color) ? color : set16ToRgb(color)
@@ -65,11 +76,14 @@ export function isLight(color: string | Array<number>): boolean {
 
 /**
  * 混色
- * @param color1 主色
- * @param color2 辅色
- * @param weight 混入的权重 0-1
- * @returns 16进制的颜色字符出啊
- * @throws 颜色格式非法或权重不是有效数字时抛错
+ * @param color1 主色，支持 #abc 与 #aabbcc
+ * @param color2 辅色，支持 #abc 与 #aabbcc
+ * @param weight 混入的权重 0-1，超出范围按边界截断
+ * @returns 16进制的颜色字符串（含#）
+ * @throws 颜色格式非法时抛 Error，weight 不是有限数字时抛 TypeError
+ * @example mix('#ff0000', '#ffffff', 0.5) // '#ff8080'
+ * @example mix('#f00', '#fff', 1) // '#ffffff'
+ * @example mix('red', '#ffffff', 0.5) // 抛 Error：颜色格式非法
  */
 export function mix(color1: string, color2: string, weight: number): string {
   const hex1 = normalizeHex(color1)

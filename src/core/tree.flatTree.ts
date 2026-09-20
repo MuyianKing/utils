@@ -6,7 +6,10 @@ interface FlatTreeItem {
  * 将树扁平化
  * @param tree_data 树形数据
  * @param config 配置
- * @param config.children 子节点
+ * @param config.children 子节点字段名，默认 'children'
+ * @returns 扁平化后的数组（不含子节点字段），tree_data 为假值时返回 []
+ * @example flatTree([{ id: 1, children: [{ id: 2 }] }]) // [{ id: 2 }, { id: 1 }]（子节点在前）
+ * @example flatTree(tree, { children: 'next' }) // 子节点字段名为 next 时
  */
 export function flatTree<T extends FlatTreeItem>(tree_data: T[], config?: {
   children?: string
